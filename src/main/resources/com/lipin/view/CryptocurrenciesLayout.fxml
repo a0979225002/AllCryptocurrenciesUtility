@@ -20,13 +20,13 @@
                      <top>
                         <AnchorPane prefHeight="70.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                            <children>
-                              <TextField alignment="TOP_LEFT" layoutX="246.0" layoutY="19.0" prefHeight="29.0" prefWidth="303.0" text="Search" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="280.0" AnchorPane.topAnchor="20.0" />
+                              <TextField fx:id="searchText" alignment="TOP_LEFT" layoutX="246.0" layoutY="19.0" prefHeight="29.0" prefWidth="303.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="280.0" AnchorPane.topAnchor="20.0" />
                               <Button contentDisplay="CENTER" layoutX="778.0" layoutY="19.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Excel">
                                  <font>
                                     <Font size="16.0" />
                                  </font>
                               </Button>
-                              <Button contentDisplay="CENTER" layoutX="14.0" layoutY="19.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="刷新">
+                              <Button fx:id="updateButton" contentDisplay="CENTER" layoutX="14.0" layoutY="19.0" mnemonicParsing="false" onAction="#updateTableview" prefHeight="25.0" prefWidth="100.0" text="刷新">
                                  <font>
                                     <Font size="16.0" />
                                  </font>
@@ -34,13 +34,6 @@
                            </children>
                         </AnchorPane>
                      </top>
-                     <bottom>
-                        <AnchorPane maxWidth="1000.0" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                           <BorderPane.margin>
-                              <Insets />
-                           </BorderPane.margin>
-                        </AnchorPane>
-                     </bottom>
                      <center>
                         <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
                           <tabs>
@@ -55,13 +48,13 @@
                                                       <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                                    </columnResizePolicy>
                                                    <columns>
-                                                      <TableColumn fx:id="randColumn" prefWidth="51.66371202468872"  text="Rank" />
-                                                      <TableColumn fx:id="nameColumn" prefWidth="85.75141143798828" text="貨幣名稱" />
+                                                      <TableColumn fx:id="randColumn" minWidth="-1.0" prefWidth="15.0" text="Rank" />
+                                                      <TableColumn fx:id="nameColumn" minWidth="70.0" prefWidth="85.75141143798828" text="貨幣名稱" />
                                                       <TableColumn fx:id="symbolColumn" prefWidth="67.46607971191406" text="代號" />
-                                                      <TableColumn fx:id="marketCapColumn" prefWidth="120.05386352539062" text="市值" />
-                                                      <TableColumn fx:id="priceColumn" prefWidth="124.25064086914062" sortType="DESCENDING" text="價格" />
-                                                      <TableColumn fx:id="circulating_SupplyColumn" prefWidth="152.77218627929688" text="流通供給量" />
-                                                      <TableColumn fx:id="volume_24hColumn" prefWidth="100.0" text="交易量(24小時)" />
+                                                      <TableColumn fx:id="marketCapColumn" minWidth="70.0" prefWidth="120.05386352539062" text="市值" />
+                                                      <TableColumn fx:id="priceColumn" minWidth="70.0" prefWidth="124.25064086914062" sortType="DESCENDING" text="價格" />
+                                                      <TableColumn fx:id="circulating_SupplyColumn" minWidth="70.0" prefWidth="152.77218627929688" text="流通供給量" />
+                                                      <TableColumn fx:id="volume_24hColumn" minWidth="70.0" prefWidth="100.0" text="交易量(24小時)" />
                                                       <TableColumn fx:id="change_1hColumn" prefWidth="70.0" text="\% 1小時" />
                                                       <TableColumn fx:id="change_24hColumn" prefWidth="70.0" text="\% 24小時" />
                                                       <TableColumn fx:id="change_7dColumn" prefWidth="70.0" text="\% 7天" />

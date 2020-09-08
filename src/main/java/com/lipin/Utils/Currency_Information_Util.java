@@ -26,14 +26,14 @@ public class Currency_Information_Util {
     public static String limit = "5000";//要搜尋的虛擬貨幣比數
     public static String convert = "USD";//金額要轉成哪個國家
 
-    LinkedHashMap<String,ArrayList<String>> CryptocurrenciesInMap = new LinkedHashMap<>();
+    LinkedHashMap<String,ArrayList> CryptocurrenciesInMap = new LinkedHashMap<>();
 
 
     //拿取獲取的Cryptocurrenciesjson檔,重新解析存入map中
-    public LinkedHashMap<String,ArrayList<String>> getCryptocurrencies(String CryptocurrenciesJson){
+    public LinkedHashMap<String,ArrayList> getCryptocurrencies(String CryptocurrenciesJson){
         //格式化數字,讓數字每三位數增加一個逗點
-        NumberFormat numberFormat = NumberFormat.getNumberInstance();
-        numberFormat.setMaximumFractionDigits(6);
+//        NumberFormat numberFormat = NumberFormat.getNumberInstance();
+//        numberFormat.setMaximumFractionDigits(6);
         JSONObject jo1 = new JSONObject(CryptocurrenciesJson);//取得json檔
         JSONArray ja1 = jo1.getJSONArray("data");//解析json檔
         for (int i =0; i<ja1.length(); i++){
@@ -72,13 +72,13 @@ public class Currency_Information_Util {
 
             cryptocurrenciesInArrayLsit.add(name);
             cryptocurrenciesInArrayLsit.add(symbol);
-            cryptocurrenciesInArrayLsit.add(numberFormat.format(market_cap));
-            cryptocurrenciesInArrayLsit.add(numberFormat.format(price));
-            cryptocurrenciesInArrayLsit.add(numberFormat.format(circulating_supply));
-            cryptocurrenciesInArrayLsit.add(numberFormat.format(volume_24h));
-            cryptocurrenciesInArrayLsit.add(percent_change_1h.toString()+"%");
-            cryptocurrenciesInArrayLsit.add(percent_change_24h.toString()+"%");
-            cryptocurrenciesInArrayLsit.add(percent_change_7d.toString()+"%");
+            cryptocurrenciesInArrayLsit.add(market_cap);
+            cryptocurrenciesInArrayLsit.add(price);
+            cryptocurrenciesInArrayLsit.add(circulating_supply);
+            cryptocurrenciesInArrayLsit.add(volume_24h);
+            cryptocurrenciesInArrayLsit.add(percent_change_1h);
+            cryptocurrenciesInArrayLsit.add(percent_change_24h);
+            cryptocurrenciesInArrayLsit.add(percent_change_7d);
 
             CryptocurrenciesInMap.put(name,cryptocurrenciesInArrayLsit);
 
@@ -88,6 +88,9 @@ public class Currency_Information_Util {
 
         return CryptocurrenciesInMap;
     }
+
+
+
     //獲得虛擬貨幣Json檔案
     public String getCryptocurrenciesJson(String apiKey,String start,String limit,String convert){
         String uri = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
@@ -110,6 +113,8 @@ public class Currency_Information_Util {
             return "Error: Invalid URL " + e.toString();
         }
     }
+
+
 
 
     public String makeAPICall(String uri, List<NameValuePair> parameters,String apiKey)
