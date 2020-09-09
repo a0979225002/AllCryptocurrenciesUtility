@@ -19,6 +19,8 @@ public class CryptocurrencyModel {
     private SimpleBigDecimalProperty change_1h;
     private SimpleBigDecimalProperty change_24h;
     private SimpleBigDecimalProperty change_7d;
+    private BooleanProperty booleanProperty;
+
 
     public CryptocurrencyModel(int rank , String name, String symbol,
                                BigInteger marketCap, BigDecimal price,
@@ -38,6 +40,18 @@ public class CryptocurrencyModel {
         this.change_1h = new SimpleBigDecimalProperty(change_1h);
         this.change_24h = new SimpleBigDecimalProperty(change_24h);
         this.change_7d = new SimpleBigDecimalProperty(change_7d);
+    }
+
+    public boolean isBooleanProperty() {
+        return booleanProperty.get();
+    }
+
+    public BooleanProperty booleanPropertyProperty() {
+        return booleanProperty;
+    }
+
+    public void setBooleanProperty(boolean booleanProperty) {
+        this.booleanProperty.set(booleanProperty);
     }
 
     public int getRank() {

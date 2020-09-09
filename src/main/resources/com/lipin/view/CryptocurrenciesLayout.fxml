@@ -21,7 +21,7 @@
                         <AnchorPane prefHeight="70.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                            <children>
                               <TextField fx:id="searchText" alignment="TOP_LEFT" layoutX="246.0" layoutY="19.0" prefHeight="29.0" prefWidth="303.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="280.0" AnchorPane.topAnchor="20.0" />
-                              <Button contentDisplay="CENTER" layoutX="778.0" layoutY="19.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Excel">
+                              <Button fx:id="addMyLove" onAction="#addMyLove" contentDisplay="CENTER" layoutX="778.0" layoutY="19.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="add我的最愛">
                                  <font>
                                     <Font size="16.0" />
                                  </font>
@@ -67,33 +67,33 @@
                               </content>
                             </Tab>
                             <Tab text="我的最愛">
-                              <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                       <children>
-                                          <ScrollPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                             <content>
-                                                <TableView>
-                                                   <columnResizePolicy>
-                                                      <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                                   </columnResizePolicy>
-                                                   <columns>
-                                                      <TableColumn prefWidth="50.826343297958374" text="Rank" />
-                                                      <TableColumn prefWidth="106.59286117553711" text="貨幣名稱" />
-                                                      <TableColumn prefWidth="79.00602722167969" text="代號" />
-                                                      <TableColumn prefWidth="200.0" text="市值" />
-                                                      <TableColumn prefWidth="200.0" text="價格" />
-                                                      <TableColumn prefWidth="200.0" text="流通供給量" />
-                                                      <TableColumn prefWidth="100.0" text="交易量(24小時)" />
-                                                      <TableColumn prefWidth="70.0" text="\% 1小時" />
-                                                      <TableColumn prefWidth="70.0" text="\% 24小時" />
-                                                      <TableColumn prefWidth="70.0" text="\% 7天" />
-                                                   </columns>
-                                                </TableView>
-                                             </content>
-                                          </ScrollPane>
-                                       </children>
+                                <content>
+                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                        <children>
+                                            <ScrollPane fitToHeight="true" fitToWidth="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                <content>
+                                                    <TableView fx:id="cryptocurrencyTable_MyLove" prefHeight="541.0" prefWidth="1149.0">
+                                                        <columnResizePolicy>
+                                                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                                        </columnResizePolicy>
+                                                        <columns>
+                                                            <TableColumn fx:id="randColumn_MyLove" minWidth="-1.0" prefWidth="15.0" text="Rank" />
+                                                            <TableColumn fx:id="nameColumn_MyLove" minWidth="70.0" prefWidth="85.75141143798828" text="貨幣名稱" />
+                                                            <TableColumn fx:id="symbolColumn_MyLove" prefWidth="67.46607971191406" text="代號" />
+                                                            <TableColumn fx:id="marketCapColumn_MyLove" minWidth="70.0" prefWidth="120.05386352539062" text="市值" />
+                                                            <TableColumn fx:id="priceColumn_MyLove" minWidth="70.0" prefWidth="124.25064086914062" sortType="DESCENDING" text="價格" />
+                                                            <TableColumn fx:id="circulating_SupplyColumn_MyLove" minWidth="70.0" prefWidth="152.77218627929688" text="流通供給量" />
+                                                            <TableColumn fx:id="volume_24hColumn_MyLove" minWidth="70.0" prefWidth="100.0" text="交易量(24小時)" />
+                                                            <TableColumn fx:id="change_1hColumn_MyLove" prefWidth="70.0" text="\% 1小時" />
+                                                            <TableColumn fx:id="change_24hColumn_MyLove" prefWidth="70.0" text="\% 24小時" />
+                                                            <TableColumn fx:id="change_7dColumn_MyLove" prefWidth="70.0" text="\% 7天" />
+                                                        </columns>
+                                                    </TableView>
+                                                </content>
+                                            </ScrollPane>
+                                        </children>
                                     </AnchorPane>
-                              </content>
+                                </content>
                             </Tab>
                           </tabs>
                         </TabPane>

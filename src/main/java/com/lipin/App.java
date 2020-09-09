@@ -33,6 +33,12 @@ public class App extends Application {
 
 //    Construtor
     public App(){
+        setTableData();
+    }
+
+
+    //加入資料
+    public void setTableData(){
         System.out.println("1");
         cryptocurrencyData = FXCollections.observableArrayList();
         LinkedHashMap<String, ArrayList> cryptocurrenciesInMap = new LinkedHashMap<>();
@@ -57,7 +63,7 @@ public class App extends Application {
         for (String key:cryptocurrenciesInMap.keySet()){
             rank++;
             cryptocurrencyData.add(new CryptocurrencyModel(
-                    rank,
+                    (Integer)rank,
                     cryptocurrenciesInMap.get(key).get(0).toString(),
                     cryptocurrenciesInMap.get(key).get(1).toString(),
                     (BigInteger) cryptocurrenciesInMap.get(key).get(2),
@@ -73,7 +79,7 @@ public class App extends Application {
 
 
 
-//
+
 //    public ObservableList<CryptocurrencyModel> getCryptocurrencyData(){
 //        return cryptocurrencyData;
 //    }

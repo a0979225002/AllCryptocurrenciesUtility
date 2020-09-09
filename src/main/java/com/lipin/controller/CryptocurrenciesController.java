@@ -1,28 +1,19 @@
 package com.lipin.controller;
 
 import com.lipin.App;
-import com.lipin.Utils.Currency_Information_Util;
 import com.lipin.model.CryptocurrencyModel;
-import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.function.Predicate;
 
 public class CryptocurrenciesController {
@@ -50,9 +41,33 @@ public class CryptocurrenciesController {
     private TableColumn<CryptocurrencyModel,Number> change_7dColumn;
     @FXML
     private TextField searchText;
+    @FXML
+    private Button addMyLove;
 
+    private TableColumn<CryptocurrencyModel,Boolean> myLoveColmn;
 
-
+    @FXML
+    private TableView<CryptocurrencyModel> cryptocurrencyTable_MyLove;
+    @FXML
+    private TableColumn<CryptocurrencyModel,Number> randColumn_MyLove;
+    @FXML
+    private TableColumn<CryptocurrencyModel,String> nameColumn_MyLove;
+    @FXML
+    private TableColumn<CryptocurrencyModel,String> symbolColumn_MyLove;
+    @FXML
+    private TableColumn<CryptocurrencyModel,Number> marketCapColumn_MyLove;
+    @FXML
+    private TableColumn<CryptocurrencyModel,Number> priceColumn_MyLove;
+    @FXML
+    private TableColumn<CryptocurrencyModel,Number> circulating_SupplyColumn_MyLove;
+    @FXML
+    private TableColumn<CryptocurrencyModel,Number> volume_24hColumn_MyLove;
+    @FXML
+    private TableColumn<CryptocurrencyModel,Number> change_1hColumn_MyLove;
+    @FXML
+    private TableColumn<CryptocurrencyModel,Number> change_24hColumn_MyLove;
+    @FXML
+    private TableColumn<CryptocurrencyModel,Number> change_7dColumn_MyLove;
 
     private App mainApp;
 
@@ -94,12 +109,8 @@ public class CryptocurrenciesController {
 
         cryptocurrencyTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         //一般寫法
-        randColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<CryptocurrencyModel, Number>, ObservableValue<Number>>() {
-            @Override
-            public ObservableValue<Number> call(TableColumn.CellDataFeatures<CryptocurrencyModel, Number> cryptocurrencyModelNumberCellDataFeatures) {
-                return cryptocurrencyModelNumberCellDataFeatures.getValue().rankProperty();
-            }
-        });
+
+        randColumn.setCellValueFactory(callback->callback.getValue().rankProperty());
         //增加Rand的格子寬度
         randColumn.setMinWidth(15);
 
@@ -332,6 +343,57 @@ public class CryptocurrenciesController {
         searchListener();
 
         System.out.println("有來媽");
+
+    }
+
+    /**
+     * 加入我的最愛列表
+     * @param actionEvent
+     */
+    boolean buttomEvent = true;
+    public void addMyLove(ActionEvent actionEvent) {
+        cryptocurrencyTable.setEditable(true);
+        if (buttomEvent == true){
+            randColumn.setText("最愛");
+            addMyLove.setText("關閉");
+
+            System.out.println(actionEvent.isConsumed());
+
+            randColumn.setCellFactory(callBack->new CheckBoxTableCell<>());
+
+            System.out.println(randColumn.editableProperty());
+
+
+
+            buttomEvent = false;
+        }else {
+            randColumn.setText("Rand");
+            addMyLove.setText("add");
+
+            randColumn.setCellFactory(new Callback<TableColumn<CryptocurrencyModel, Number>, TableCell<CryptocurrencyModel, Number>>() {
+                @Override
+                public TableCell<CryptocurrencyModel, Number> call(TableColumn<CryptocurrencyModel, Number> cryptocurrencyModelNumberTableColumn) {
+
+                    System.out.println(randColumn.editableProperty());
+
+                    return new TableCell<>(){
+                        @Override
+                        protected void updateItem(Number number, boolean b) {
+                            super.updateItem(number, b);
+                            int i = 0;
+                            if (number!=null){
+                                setAlignment(Pos.CENTER);
+                                setText(number+"");
+                            }
+
+                        }
+                    };
+                }
+            });
+
+            buttomEvent = true;
+        }
+
 
     }
 }
