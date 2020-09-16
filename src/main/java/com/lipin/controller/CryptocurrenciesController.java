@@ -17,10 +17,8 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DataFormat;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 import javafx.util.Callback;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.NumberFormat;
@@ -30,7 +28,7 @@ import java.util.function.Predicate;
 
 public class CryptocurrenciesController {
     @FXML
-    private TableView<CryptocurrencyModel> cryptocurrencyTable;
+    public TableView<CryptocurrencyModel> cryptocurrencyTable;
     @FXML
     private TableColumn<CryptocurrencyModel, Object> randColumn;
     @FXML
@@ -58,7 +56,7 @@ public class CryptocurrenciesController {
 
 
     @FXML
-    private TableView<CryptocurrencyModel> cryptocurrencyTable_MyLove;
+    public TableView<CryptocurrencyModel> cryptocurrencyTable_MyLove;
     @FXML
     private TableColumn<CryptocurrencyModel, Object> randColumn_MyLove;
     @FXML
@@ -89,7 +87,7 @@ public class CryptocurrenciesController {
     }
 
     //JavaFX 初始化調用,執行後就會自動調用
-    ObservableList<CryptocurrencyModel> myLoveData;
+    public ObservableList<CryptocurrencyModel> myLoveData;
     @FXML
     private void initialize() {
         myLoveData = FXCollections.observableArrayList();
@@ -116,7 +114,7 @@ public class CryptocurrenciesController {
     }
 
     /**
-     * 將有勾選為我的最愛的虛擬貨幣加入(我的最愛Table中)
+     * 將有勾選為我的最愛的貨幣加入(我的最愛Table中)
      */
     private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
     public void setMyLoveTable() {
@@ -150,24 +148,25 @@ public class CryptocurrenciesController {
                 Dragboard db = event.getDragboard();
                 if (db.hasContent(SERIALIZED_MIME_TYPE)) {
                     int draggedIndex = (Integer) db.getContent(SERIALIZED_MIME_TYPE);
-                    CryptocurrencyModel t = cryptocurrencyTable_MyLove.getItems().remove(draggedIndex);
+                    CryptocurrencyModel t = myLoveData.remove(draggedIndex);
                     int dropIndex ;
                     if (row.isEmpty()) {
-                        dropIndex = cryptocurrencyTable_MyLove.getItems().size() ;
+                        dropIndex = myLoveData.size() ;
                     } else {
                         dropIndex = row.getIndex();
                     }
-                    cryptocurrencyTable_MyLove.getItems().add(dropIndex, t);
+                    myLoveData.add(dropIndex, t);
                     event.setDropCompleted(true);
                     cryptocurrencyTable_MyLove.getSelectionModel().select(dropIndex);
                     event.consume();
 
-                }              });
+                }
+            });
 
             return row;
         });
 
-        randColumn_MyLove.setCellValueFactory(callbck->callbck.getValue().booleanPropertyProperty());
+        randColumn_MyLove.setCellValueFactory(callbck->callbck.getValue().rankProperty());
         randColumn_MyLove.setCellFactory(new Callback<TableColumn<CryptocurrencyModel, Object>, TableCell<CryptocurrencyModel, Object>>() {
             @Override
             public TableCell<CryptocurrencyModel, Object> call(TableColumn<CryptocurrencyModel, Object> cryptocurrencyModelObjectTableColumn) {
@@ -175,15 +174,13 @@ public class CryptocurrenciesController {
                     @Override
                     protected void updateItem(Object o, boolean b) {
                         super.updateItem(o, b);
-                        CheckBox checkBox = null;
+                        int rank = 0;
                         if (o!=null){
-                            checkBox = new CheckBox();
-                            setAlignment(Pos.CENTER);
-                            ObservableList<CryptocurrencyModel> listdata = this.getTableView().getItems();
-                            CryptocurrencyModel cryptocurrencyModel = listdata.get(this.getTableRow().getIndex());
-                            checkBox.selectedProperty().bindBidirectional(cryptocurrencyModel.booleanPropertyProperty());
+                            rank++;
+                            System.out.println(o);
+
+                            setText(rank+"");
                         }
-                        setGraphic(checkBox);
                     }
                 };
             }
@@ -357,7 +354,6 @@ public class CryptocurrenciesController {
         //將Number格式化數字用
 
         cryptocurrencyTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
         randColumn.setCellValueFactory(callback -> callback.getValue().rankProperty());
         //增加Rand的格子寬度
         randColumn.setMinWidth(15);
@@ -543,12 +539,12 @@ public class CryptocurrenciesController {
     }
 
     //搜尋功能
-    public void searchListener() {
+    public void searchListener(ObservableList tableData,TableView tableView) {
         /**
          *  搜尋欄位功能
          */
 //        將要搜尋的資料加入FilteredList,以便search時可以尋找該資料
-        FilteredList<CryptocurrencyModel> fileterData = new FilteredList<>(mainApp.cryptocurrencyData, new Predicate<CryptocurrencyModel>() {
+        FilteredList<CryptocurrencyModel> fileterData = new FilteredList<>(tableData, new Predicate<CryptocurrencyModel>() {
             @Override
             public boolean test(CryptocurrencyModel cryptocurrencyModel) {
                 return true;
@@ -581,8 +577,8 @@ public class CryptocurrenciesController {
         });
         SortedList<CryptocurrencyModel> sortedData = new SortedList<>(fileterData);
 
-        sortedData.comparatorProperty().bind(cryptocurrencyTable.comparatorProperty());
-        cryptocurrencyTable.setItems(sortedData);
+        sortedData.comparatorProperty().bind(tableView.comparatorProperty());
+        tableView.setItems(sortedData);
     }
 
     //載入取MainApp中add的Data;
@@ -638,7 +634,8 @@ public class CryptocurrenciesController {
         cryptocurrencyTable.setItems(cryptocurrencyData);
 
         searchText.setText("");
-        searchListener();
+        searchListener(mainApp.cryptocurrencyData,cryptocurrencyTable);
+        searchListener(myLoveData,cryptocurrencyTable_MyLove);
 
     }
 
@@ -648,100 +645,122 @@ public class CryptocurrenciesController {
      * @param actionEvent
      */
     boolean buttomEvent = true;
-
-
     public void addMyLove(ActionEvent actionEvent) {
         cryptocurrencyTable.setEditable(true);
+        cryptocurrencyTable_MyLove.setEditable(true);
+
         //打開我的最愛功能時的判斷
         if (buttomEvent == true) {
-            randColumn.setText("最愛");
-            addMyLove.setText("關閉");
-
-            randColumn.setCellValueFactory(callBack -> callBack.getValue().booleanPropertyProperty());
-            randColumn.setCellFactory(new Callback<TableColumn<CryptocurrencyModel, Object>, TableCell<CryptocurrencyModel, Object>>() {
-                @Override
-                public TableCell<CryptocurrencyModel, Object> call(TableColumn<CryptocurrencyModel, Object> cryptocurrencyModelObjectTableColumn) {
-                    return new TableCell<>() {
-                        @Override
-                        protected void updateItem(Object o, boolean b) {
-                            super.updateItem(o, b);
-                            CheckBox checkBox = null;
-                            if (o != null) {
-//                                    System.out.println("1:"+o+"2:"+b);
-
-                                checkBox = new CheckBox();
-                                setAlignment(Pos.CENTER);
-                                //綁定動態更改數據,當用戶點擊checkBox時,會隨即更新Model內的值
-                                if (this.getTableRow() != null) {
-
-                                    ObservableList<CryptocurrencyModel> listdata = this.getTableView().getItems();
-                                    CryptocurrencyModel cryptocurrencyModel = listdata.get(this.getTableRow().getIndex());
-                                    checkBox.selectedProperty().bindBidirectional(cryptocurrencyModel.booleanPropertyProperty());
-
-                                    //如果用戶點擊將該貨幣加入我的最愛
-                                    //檢查該貨幣是否已存在在myLoveData中
-                                    //如果沒有存在就加入到myLoveData陣列中
-                                    if ((Boolean) o == true && !myLoveData.contains(listdata.get(this.getTableRow().getIndex()))) {
-                                        myLoveData.add(listdata.get(this.getTableRow().getIndex()));
-                                        cryptocurrencyTable_MyLove.setItems(myLoveData);
-                                    //當用戶選擇將該貨幣解除我的最愛時
-                                    //檢查該貨幣是否已存在在myLoveData中
-                                    //如果存在就將myLoveData陣列中該class刪除
-                                    } else if ((Boolean) o == false && myLoveData.contains(listdata.get(this.getTableRow().getIndex()))) {
-                                        myLoveData.remove(listdata.get(this.getTableRow().getIndex()));
-                                        cryptocurrencyTable_MyLove.setItems(myLoveData);
-                                    }
-                                }
-                            }
-
-                            setGraphic(checkBox);
-                        }
-                    };
-                }
-            });
-
+            openMyLoveBottum();
+            openMyLoveBottum(randColumn_MyLove);
             buttomEvent = false;
             //關閉我的最愛功能時的判斷
         } else {
-            randColumn.setText("Rand");
-            addMyLove.setText("add");
-            randColumn.setCellValueFactory(callBack -> callBack.getValue().rankProperty());
-            randColumn.setCellFactory(new Callback<TableColumn<CryptocurrencyModel, Object>, TableCell<CryptocurrencyModel, Object>>() {
-                @Override
-                public TableCell<CryptocurrencyModel, Object> call(TableColumn<CryptocurrencyModel, Object> cryptocurrencyModelObjectTableColumn) {
-                    return new TableCell<>() {
-                        @Override
-                        protected void updateItem(Object o, boolean b) {
-                            super.updateItem(o, b);
-
-                            if (o != null) {
-                                setAlignment(Pos.CENTER);
-                                setText(o + "");
-                            }
-                        }
-                    };
-                }
-            });
-
-            randColumn.setCellFactory(new Callback<TableColumn<CryptocurrencyModel, Object>, TableCell<CryptocurrencyModel, Object>>() {
-                @Override
-                public TableCell<CryptocurrencyModel, Object> call(TableColumn<CryptocurrencyModel, Object> cryptocurrencyModelObjectTableColumn) {
-                    return new TableCell<>() {
-                        @Override
-                        protected void updateItem(Object o, boolean b) {
-                            super.updateItem(o, b);
-                            if (o != null) {
-                                setAlignment(Pos.CENTER);
-                                setText(o + "");
-                            }
-                        }
-                    };
-                }
-            });
-
+            closeMyLoveButtom(randColumn);
+            closeMyLoveButtom(randColumn_MyLove);
             buttomEvent = true;
         }
 
+    }
+    //更改綁定的列,目的讓MyLoveTable擁有動態調換第一個列rand的功能,能使用CheckBox功能
+    private void openMyLoveBottum(TableColumn<CryptocurrencyModel,Object> column){
+        column.setText("最愛");
+        column.setCellValueFactory(callback->callback.getValue().booleanPropertyProperty());
+        column.setCellFactory(new Callback<TableColumn<CryptocurrencyModel, Object>, TableCell<CryptocurrencyModel, Object>>() {
+            @Override
+            public TableCell<CryptocurrencyModel, Object> call(TableColumn<CryptocurrencyModel, Object> cryptocurrencyModelObjectTableColumn) {
+                return new TableCell<>(){
+                    @Override
+                    protected void updateItem(Object o, boolean b) {
+                        super.updateItem(o, b);
+                        CheckBox checkBox = null;
+                        if (o!=null){
+                            checkBox = new CheckBox();
+                            setAlignment(Pos.CENTER);
+                            if (this.getTableRow() != null) {
 
+                                ObservableList<CryptocurrencyModel> listdata = this.getTableView().getItems();
+                                CryptocurrencyModel cryptocurrencyModel = listdata.get(this.getTableRow().getIndex());
+                                checkBox.selectedProperty().bindBidirectional(cryptocurrencyModel.booleanPropertyProperty());
+                            }
+
+                        }
+                        setGraphic(checkBox);
+                    }
+                };
+            }
+        });
+
+    }
+    //AllTable的動態更改第一個列的功能,能夠使用CheckBox功能
+    //當用戶點擊CheckBox將該貨幣加入最愛,會直接將該該列class加入(myLoveData)list中
+    //反之將會將myLoveData這個list內該列index刪除
+    private void openMyLoveBottum(){
+        randColumn.setText("最愛");
+        addMyLove.setText("關閉CheckBox");
+
+        randColumn.setCellValueFactory(callBack -> callBack.getValue().booleanPropertyProperty());
+        randColumn.setCellFactory(new Callback<TableColumn<CryptocurrencyModel, Object>, TableCell<CryptocurrencyModel, Object>>() {
+            @Override
+            public TableCell<CryptocurrencyModel, Object> call(TableColumn<CryptocurrencyModel, Object> cryptocurrencyModelObjectTableColumn) {
+                return new TableCell<>() {
+                    @Override
+                    protected void updateItem(Object o, boolean b) {
+                        super.updateItem(o, b);
+                        CheckBox checkBox = null;
+                        if (o != null) {
+
+                            checkBox = new CheckBox();
+                            setAlignment(Pos.CENTER);
+                            //綁定動態更改數據,當用戶點擊checkBox時,會隨即更新Model內的值
+                            if (this.getTableRow() != null) {
+                                ObservableList<CryptocurrencyModel> listdata = this.getTableView().getItems();
+                                CryptocurrencyModel cryptocurrencyModel = listdata.get(this.getTableRow().getIndex());
+                                checkBox.selectedProperty().bindBidirectional(cryptocurrencyModel.booleanPropertyProperty());
+
+                                //如果用戶點擊將該貨幣加入我的最愛
+                                //檢查該貨幣是否已存在在myLoveData中
+                                //如果沒有存在就加入到myLoveData陣列中
+                                if ((Boolean) o == true && !myLoveData.contains(listdata.get(this.getTableRow().getIndex()))) {
+                                    myLoveData.add(listdata.get(this.getTableRow().getIndex()));
+                                    cryptocurrencyTable_MyLove.setItems(myLoveData);
+                                    searchListener(myLoveData,cryptocurrencyTable_MyLove);
+
+                                    //當用戶選擇將該貨幣解除我的最愛時
+                                    //檢查該貨幣是否已存在在myLoveData中
+                                    //如果存在就將myLoveData陣列中該class刪除
+                                } else if ((Boolean) o == false && myLoveData.contains(listdata.get(this.getTableRow().getIndex()))) {
+                                    myLoveData.remove(listdata.get(this.getTableRow().getIndex()));
+                                    cryptocurrencyTable_MyLove.setItems(myLoveData);
+                                    searchListener(myLoveData,cryptocurrencyTable_MyLove);
+                                }
+                            }
+                        }
+                        setGraphic(checkBox);
+                    }
+                };
+            }
+        });
+    }
+    private void closeMyLoveButtom(TableColumn<CryptocurrencyModel,Object> column){
+        column.setText("Rand");
+        addMyLove.setText("開啟我的最愛");
+        column.setCellValueFactory(callBack -> callBack.getValue().rankProperty());
+        column.setCellFactory(new Callback<TableColumn<CryptocurrencyModel, Object>, TableCell<CryptocurrencyModel, Object>>() {
+            @Override
+            public TableCell<CryptocurrencyModel, Object> call(TableColumn<CryptocurrencyModel, Object> cryptocurrencyModelObjectTableColumn) {
+                return new TableCell<>() {
+                    @Override
+                    protected void updateItem(Object o, boolean b) {
+                        super.updateItem(o, b);
+
+                        if (o != null) {
+                            setAlignment(Pos.CENTER);
+                            setText(o + "");
+                        }
+                    }
+                };
+            }
+        });
     }
 }

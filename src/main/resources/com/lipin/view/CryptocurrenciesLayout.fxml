@@ -20,8 +20,8 @@
                      <top>
                         <AnchorPane prefHeight="70.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                            <children>
-                              <TextField fx:id="searchText" alignment="TOP_LEFT" layoutX="246.0" layoutY="19.0" prefHeight="29.0" prefWidth="303.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="280.0" AnchorPane.topAnchor="20.0" />
-                              <Button fx:id="addMyLove" onAction="#addMyLove" contentDisplay="CENTER" layoutX="778.0" layoutY="19.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="add我的最愛">
+                              <TextField fx:id="searchText" alignment="TOP_LEFT" layoutX="266.0" layoutY="20.0" prefHeight="29.0" prefWidth="303.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="266.0" AnchorPane.topAnchor="20.0" />
+                              <Button fx:id="addMyLove" contentDisplay="CENTER" layoutX="668.0" layoutY="19.0" minWidth="200" mnemonicParsing="false" onAction="#addMyLove" prefHeight="25.0" prefWidth="100.0" text="開啟我的最愛">
                                  <font>
                                     <Font size="16.0" />
                                  </font>

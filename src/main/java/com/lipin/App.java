@@ -125,7 +125,10 @@ public class App extends Application {
 
             System.out.println(":2");
             controller.setMainApp(this);
-            controller.searchListener();
+            controller.searchListener(cryptocurrencyData,controller.cryptocurrencyTable);
+            //還暫時無法使用:myLoveData須從外部資料讀取
+//            controller.searchListener(controller.myLoveData,controller.cryptocurrencyTable_MyLove);
+
 
 
 
