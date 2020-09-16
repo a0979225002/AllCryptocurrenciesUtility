@@ -9,7 +9,7 @@ import java.math.BigInteger;
 
 public class CryptocurrencyModel {
     //使用Property目的是為了能隨時更新view的資訊
-    private IntegerProperty rank;
+    private SimpleObjectProperty rank;
     private StringProperty name;
     private StringProperty symbol;
     private SimpleBigIntegerProperty marketCap;
@@ -19,18 +19,15 @@ public class CryptocurrencyModel {
     private SimpleBigDecimalProperty change_1h;
     private SimpleBigDecimalProperty change_24h;
     private SimpleBigDecimalProperty change_7d;
-    private BooleanProperty booleanProperty;
+    private SimpleObjectProperty booleanProperty;
 
-
-    public CryptocurrencyModel(int rank , String name, String symbol,
+    public CryptocurrencyModel(Object myLove , Object rank , String name, String symbol,
                                BigInteger marketCap, BigDecimal price,
                                BigInteger circulating_Supply, BigInteger volume_24h,
                                BigDecimal change_1h, BigDecimal change_24h,
                                BigDecimal change_7d) {
-
-
-
-        this.rank = new SimpleIntegerProperty(rank);
+        this.booleanProperty = new SimpleObjectProperty(myLove);
+        this.rank = new SimpleObjectProperty(rank);
         this.name = new SimpleStringProperty(name);
         this.symbol = new SimpleStringProperty(symbol);
         this.marketCap = new SimpleBigIntegerProperty(marketCap);
@@ -42,23 +39,23 @@ public class CryptocurrencyModel {
         this.change_7d = new SimpleBigDecimalProperty(change_7d);
     }
 
-    public boolean isBooleanProperty() {
+    public Object isBooleanProperty() {
         return booleanProperty.get();
     }
 
-    public BooleanProperty booleanPropertyProperty() {
+    public SimpleObjectProperty booleanPropertyProperty() {
         return booleanProperty;
     }
 
-    public void setBooleanProperty(boolean booleanProperty) {
+    public void setBooleanProperty(Object booleanProperty) {
         this.booleanProperty.set(booleanProperty);
     }
 
-    public int getRank() {
+    public Object getRank() {
         return rank.get();
     }
 
-    public IntegerProperty rankProperty() {
+    public SimpleObjectProperty rankProperty() {
         return rank;
     }
 

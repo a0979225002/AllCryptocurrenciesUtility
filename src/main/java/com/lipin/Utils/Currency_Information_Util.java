@@ -28,7 +28,7 @@ public class Currency_Information_Util {
 
     LinkedHashMap<String,ArrayList> CryptocurrenciesInMap = new LinkedHashMap<>();
 
-
+    
     //拿取獲取的Cryptocurrenciesjson檔,重新解析存入map中
     public LinkedHashMap<String,ArrayList> getCryptocurrencies(String CryptocurrenciesJson){
         //格式化數字,讓數字每三位數增加一個逗點

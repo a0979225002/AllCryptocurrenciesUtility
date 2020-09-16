@@ -60,10 +60,12 @@ public class App extends Application {
          * 然後尋訪,取出Value
          */
         int rank = 0;
+        boolean aa = false;
         for (String key:cryptocurrenciesInMap.keySet()){
             rank++;
             cryptocurrencyData.add(new CryptocurrencyModel(
-                    (Integer)rank,
+                    (Object) aa,
+                    (Object) rank,
                     cryptocurrenciesInMap.get(key).get(0).toString(),
                     cryptocurrenciesInMap.get(key).get(1).toString(),
                     (BigInteger) cryptocurrenciesInMap.get(key).get(2),
@@ -121,6 +123,7 @@ public class App extends Application {
 
             CryptocurrenciesController controller = loader.getController();
 
+            System.out.println(":2");
             controller.setMainApp(this);
             controller.searchListener();
 
