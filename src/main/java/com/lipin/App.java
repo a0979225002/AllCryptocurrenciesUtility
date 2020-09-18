@@ -14,12 +14,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
+import java.io.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * JavaFX App
@@ -122,14 +120,10 @@ public class App extends Application {
             cryptocurrenciesOverview = loader.load();
 
             CryptocurrenciesController controller = loader.getController();
-
-            System.out.println(":2");
             controller.setMainApp(this);
             controller.searchListener(cryptocurrencyData,controller.cryptocurrencyTable);
             //還暫時無法使用:myLoveData須從外部資料讀取
 //            controller.searchListener(controller.myLoveData,controller.cryptocurrencyTable_MyLove);
-
-
 
 
         } catch (IOException e) {
@@ -146,6 +140,29 @@ public class App extends Application {
         System.out.println("返回主頁");
         return primaryStage;
     }
+
+//    @Override
+//    public void stop()  throws Exception{
+//        super.stop();
+//
+//        File file = new File("./sava.txt");
+//
+//        try {
+//            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
+//
+//            CryptocurrencyModel[] cryptocurrencyModels = new CryptocurrencyModel[cryptocurrencyData.size()];
+//
+//            cryptocurrencyData.toArray(cryptocurrencyModels);
+//
+//            out.writeObject(cryptocurrencyModels);
+//
+//            System.out.println(cryptocurrencyModels);
+//        }catch (IOException e){
+//            System.out.println(e.toString());
+//        }
+//
+//    }
+
     public static void main(String[] args) {
         launch();
     }

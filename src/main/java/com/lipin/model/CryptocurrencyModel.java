@@ -4,6 +4,7 @@ import com.lipin.Utils.SimpleBigDecimalProperty;
 import com.lipin.Utils.SimpleBigIntegerProperty;
 import javafx.beans.property.*;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
@@ -169,5 +170,22 @@ public class CryptocurrencyModel {
 
     public void setChange_7d(BigDecimal change_7d) {
         this.change_7d.set(change_7d);
+    }
+
+    @Override
+    public String toString() {
+        return "CryptocurrencyModel{" +
+                "rank=" + rank +
+                ", name=" + name +
+                ", symbol=" + symbol +
+                ", marketCap=" + marketCap +
+                ", price=" + price +
+                ", circulating_Supply=" + circulating_Supply +
+                ", volume_24h=" + volume_24h +
+                ", change_1h=" + change_1h +
+                ", change_24h=" + change_24h +
+                ", change_7d=" + change_7d +
+                ", booleanProperty=" + booleanProperty +
+                '}';
     }
 }

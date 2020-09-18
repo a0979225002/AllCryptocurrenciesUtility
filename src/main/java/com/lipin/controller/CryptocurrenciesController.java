@@ -177,8 +177,6 @@ public class CryptocurrenciesController {
                         int rank = 0;
                         if (o!=null){
                             rank++;
-                            System.out.println(o);
-
                             setText(rank+"");
                         }
                     }
