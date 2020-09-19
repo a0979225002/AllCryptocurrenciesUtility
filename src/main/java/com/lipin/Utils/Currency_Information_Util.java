@@ -28,12 +28,13 @@ public class Currency_Information_Util {
 
     LinkedHashMap<String,ArrayList> CryptocurrenciesInMap = new LinkedHashMap<>();
 
-    
+
     //拿取獲取的Cryptocurrenciesjson檔,重新解析存入map中
     public LinkedHashMap<String,ArrayList> getCryptocurrencies(String CryptocurrenciesJson){
         //格式化數字,讓數字每三位數增加一個逗點
 //        NumberFormat numberFormat = NumberFormat.getNumberInstance();
 //        numberFormat.setMaximumFractionDigits(6);
+        if (responseStatusCode == 401){
         JSONObject jo1 = new JSONObject(CryptocurrenciesJson);//取得json檔
         JSONArray ja1 = jo1.getJSONArray("data");//解析json檔
         for (int i =0; i<ja1.length(); i++){
@@ -85,6 +86,7 @@ public class Currency_Information_Util {
         }
 
         System.out.println(CryptocurrenciesInMap.get("XRP"));
+        }
 
         return CryptocurrenciesInMap;
     }
@@ -116,6 +118,7 @@ public class Currency_Information_Util {
 
 
 
+    public static int responseStatusCode;
 
     public String makeAPICall(String uri, List<NameValuePair> parameters,String apiKey)
             throws URISyntaxException, IOException {
@@ -133,7 +136,8 @@ public class Currency_Information_Util {
         CloseableHttpResponse response = client.execute(request);
 
         try {
-            System.out.println(response.getStatusLine());
+            System.out.println("Currency_Information_Util.makeAPICall:"+response.getStatusLine());
+            responseStatusCode = response.getStatusLine().getStatusCode();
             HttpEntity entity = response.getEntity();
             response_content = EntityUtils.toString(entity);
             EntityUtils.consume(entity);

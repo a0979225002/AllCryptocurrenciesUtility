@@ -87,11 +87,10 @@ public class CryptocurrenciesController {
     }
 
     //JavaFX 初始化調用,執行後就會自動調用
-    public ObservableList<CryptocurrencyModel> myLoveData;
     @FXML
     private void initialize() {
-        myLoveData = FXCollections.observableArrayList();
         setTableData();
+
         setMyLoveTable();
 
         //監聽用戶點擊Table哪個欄位
@@ -119,52 +118,7 @@ public class CryptocurrenciesController {
     private static final DataFormat SERIALIZED_MIME_TYPE = new DataFormat("application/x-java-serialized-object");
     public void setMyLoveTable() {
         cryptocurrencyTable_MyLove.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        //設置拖移功能
-        cryptocurrencyTable_MyLove.setRowFactory(callback->{
-            TableRow<CryptocurrencyModel> row =  new TableRow<>();
-            row.setOnDragDetected(event -> {
-                if (! row.isEmpty()) {
-                    Integer index = row.getIndex();
-                    Dragboard db = row.startDragAndDrop(TransferMode.MOVE);
-                    db.setDragView(row.snapshot(null, null));
-                    ClipboardContent cc = new ClipboardContent();
-                    cc.put(SERIALIZED_MIME_TYPE, index);
-                    db.setContent(cc);
-                    event.consume();
-                }
-            });
 
-            row.setOnDragOver(event -> {
-                Dragboard db = event.getDragboard();
-                if (db.hasContent(SERIALIZED_MIME_TYPE)) {
-                    if (row.getIndex() != ((Integer)db.getContent(SERIALIZED_MIME_TYPE)).intValue()) {
-                        event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-                        event.consume();
-                    }
-                }
-            });
-
-            row.setOnDragDropped(event -> {
-                Dragboard db = event.getDragboard();
-                if (db.hasContent(SERIALIZED_MIME_TYPE)) {
-                    int draggedIndex = (Integer) db.getContent(SERIALIZED_MIME_TYPE);
-                    CryptocurrencyModel t = myLoveData.remove(draggedIndex);
-                    int dropIndex ;
-                    if (row.isEmpty()) {
-                        dropIndex = myLoveData.size() ;
-                    } else {
-                        dropIndex = row.getIndex();
-                    }
-                    myLoveData.add(dropIndex, t);
-                    event.setDropCompleted(true);
-                    cryptocurrencyTable_MyLove.getSelectionModel().select(dropIndex);
-                    event.consume();
-
-                }
-            });
-
-            return row;
-        });
 
         randColumn_MyLove.setCellValueFactory(callbck->callbck.getValue().rankProperty());
         randColumn_MyLove.setCellFactory(new Callback<TableColumn<CryptocurrencyModel, Object>, TableCell<CryptocurrencyModel, Object>>() {
@@ -174,9 +128,11 @@ public class CryptocurrenciesController {
                     @Override
                     protected void updateItem(Object o, boolean b) {
                         super.updateItem(o, b);
-                        int rank = 0;
-                        if (o!=null){
-                            rank++;
+                        setAlignment(Pos.CENTER);
+                        if (o!= null){
+                            int rank = this.getIndex()+1;
+                            myLoveData.get(this.getIndex()).setRank(rank);
+                            System.out.println("::::"+myLoveData.get(this.getIndex()).getRank());
                             setText(rank+"");
                         }
                     }
@@ -580,26 +536,76 @@ public class CryptocurrenciesController {
     }
 
     //載入取MainApp中add的Data;
+    ObservableList<CryptocurrencyModel> cryptocurrencyData;
+    ObservableList<CryptocurrencyModel> myLoveData;
+
     public void setMainApp(App mainApp) {
         this.mainApp = mainApp;
+        this.myLoveData = mainApp.myLoveData;
+        this.cryptocurrencyData = mainApp.cryptocurrencyData;
 
         cryptocurrencyTable.setItems(mainApp.cryptocurrencyData);
         cryptocurrencyTable_MyLove.setItems(myLoveData);
+        //設置拖移功能
+        dragFunction();
 
     }
+    //MyLove Table的設置拖移功能
+    private void dragFunction(){
+        cryptocurrencyTable_MyLove.setRowFactory(callback->{
+            TableRow<CryptocurrencyModel> row =  new TableRow<>();
+            row.setOnDragDetected(event -> {
+                if (! row.isEmpty()) {
+                    Integer index = row.getIndex();
+                    Dragboard db = row.startDragAndDrop(TransferMode.MOVE);
+                    db.setDragView(row.snapshot(null, null));
+                    ClipboardContent cc = new ClipboardContent();
+                    cc.put(SERIALIZED_MIME_TYPE, index);
+                    db.setContent(cc);
+                    event.consume();
+                }
+            });
 
+            row.setOnDragOver(event -> {
+                Dragboard db = event.getDragboard();
+                if (db.hasContent(SERIALIZED_MIME_TYPE)) {
+                    if (row.getIndex() != ((Integer)db.getContent(SERIALIZED_MIME_TYPE)).intValue()) {
+                        event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                        event.consume();
+                    }
+                }
+            });
+
+            row.setOnDragDropped(event -> {
+                Dragboard db = event.getDragboard();
+                if (db.hasContent(SERIALIZED_MIME_TYPE)) {
+                    int draggedIndex = (Integer) db.getContent(SERIALIZED_MIME_TYPE);
+                    CryptocurrencyModel t = myLoveData.remove(draggedIndex);
+                    int dropIndex ;
+                    if (row.isEmpty()) {
+
+                        dropIndex = myLoveData.size() ;
+                    } else {
+                        dropIndex = row.getIndex();
+                    }
+                    myLoveData.add(dropIndex, t);
+                    event.setDropCompleted(true);
+                    cryptocurrencyTable_MyLove.getSelectionModel().select(dropIndex);
+                    event.consume();
+
+                }
+            });
+
+            return row;
+        });
+    }
     /**
      * 刷新TableView數據的按鈕
      *
      * @param actionEvent
      */
-    ObservableList<CryptocurrencyModel> cryptocurrencyData;
-
     public void updateTableview(ActionEvent actionEvent) {
         actionEvent.consume();
-
-
-        cryptocurrencyData = cryptocurrencyTable.getItems();
 
         Currency_Information_Util currencyInformationUtil = new Currency_Information_Util();
         LinkedHashMap<String, ArrayList> cryptocurrenciesInMap = new LinkedHashMap<>();
@@ -720,7 +726,10 @@ public class CryptocurrenciesController {
                                 //檢查該貨幣是否已存在在myLoveData中
                                 //如果沒有存在就加入到myLoveData陣列中
                                 if ((Boolean) o == true && !myLoveData.contains(listdata.get(this.getTableRow().getIndex()))) {
-                                    myLoveData.add(listdata.get(this.getTableRow().getIndex()));
+                                    int index = this.getTableRow().getIndex();
+                                    myLoveData.add(listdata.get(index));
+                                    myLoveData.get(myLoveData.size()-1).setRank(myLoveData.size()+1);
+                                    System.out.println(myLoveData.get(myLoveData.size()-1).getName());
                                     cryptocurrencyTable_MyLove.setItems(myLoveData);
                                     searchListener(myLoveData,cryptocurrencyTable_MyLove);
 

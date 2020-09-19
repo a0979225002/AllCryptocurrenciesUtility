@@ -6,10 +6,10 @@ module com.lipin {
     requires org.apache.httpcomponents.httpclient;
     requires org.apache.httpcomponents.httpcore;
     requires java.prefs;
-    requires java.xml.bind;
-    requires java.activation;
-
+    requires jakarta.activation;
+    requires jakarta.xml.bind;
 
     opens com.lipin.controller to javafx.fxml;
+    opens com.lipin.model to jakarta.xml.bind;
     exports com.lipin;
 }
